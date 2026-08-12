@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Resizer — Resize Images Online</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #667085;
+            --border: #d9e1eb;
+            --accent: #2563eb;
+            --accent-dark: #1d4ed8;
+            --soft: #eff6ff;
+            --danger-bg: #fff1f2;
+            --danger: #be123c;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #eaf1ff 0,
+                    transparent 34%
+                ),
+                var(--bg);
+            color: var(--text);
+        }
+
+        .page {
+            width: min(900px, calc(100% - 32px));
+            margin: auto;
+            padding: 48px 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: var(--soft);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(32px, 5vw, 46px);
+            letter-spacing: -1.5px;
+        }
+
+        .hero p {
+            margin: 11px auto 0;
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .app {
+            background: var(--card);
+            border: 1px solid rgba(217, 225, 235, .9);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 18px 55px rgba(30, 41, 59, .10);
+        }
+
+        .error {
+            padding: 13px 15px;
+            margin-bottom: 18px;
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid #fecdd3;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .upload {
+            display: block;
+            border: 2px dashed #b7c4d6;
+            border-radius: 18px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #fbfcfe;
+            transition: .2s ease;
+        }
+
+        .upload:hover,
+        .upload.dragover {
+            border-color: var(--accent);
+            background: #f7faff;
+        }
+
+        .upload-icon {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 14px;
+            border-radius: 17px;
+            display: grid;
+            place-items: center;
+            background: var(--soft);
+            font-size: 29px;
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .upload-subtitle {
+            margin-top: 7px;
+            color: var(--muted);
+        }
+
+        .formats {
+            margin-top: 13px;
+            color: #8a94a6;
+            font-size: 13px;
+        }
+
+        #image {
+            display: none;
+        }
+
+        .file-card {
+            display: none;
+            align-items: center;
+            gap: 14px;
+            margin-top: 16px;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #f8fafc;
+        }
+
+        .thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 11px;
+            object-fit: cover;
+            background: #e9eef5;
+            flex: 0 0 auto;
+        }
+
+        .file-name {
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .file-meta {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .section-title {
+            margin: 28px 0 12px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #3d485a;
+        }
+
+        .dimensions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 13px 42px 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .unit {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8a94a6;
+            font-size: 13px;
+        }
+
+        .lock-row {
+            margin-top: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .preset {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #374151;
+            padding: 9px 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .preset:hover,
+        .preset.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--soft);
+        }
+
+        .quality-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .quality-value {
+            color: var(--accent);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .quality-help {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .submit {
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px;
+            border: 0;
+            border-radius: 13px;
+            background: var(--accent);
+            color: white;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .submit:hover {
+            background: var(--accent-dark);
+        }
+
+        .submit.loading {
+            opacity: .75;
+            cursor: wait;
+        }
+
+        .trust {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 17px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #8a94a6;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .page {
+                padding: 28px 0;
+            }
+
+            .app {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            .dimensions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="hero">
+
+        <div class="badge">
+            ⚡ Fast & Simple
+        </div>
+
+        <h1>
+            Resize Images in Seconds
+        </h1>
+
+        <p>
+            Resize JPG, PNG and WebP images with control
+            over dimensions and quality.
+        </p>
+
+    </div>
+
+    <div class="app">
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            id="resizeForm"
+        >
+
+            <!-- Upload -->
+
+            <label
+                class="upload"
+                id="uploadArea"
+                for="image"
+            >
+
+                <div class="upload-icon">
+                    🖼️
+                </div>
+
+                <div class="upload-title">
+                    Drop your image here
+                </div>
+
+                <div class="upload-subtitle">
+                    or click to browse from your device
+                </div>
+
+                <div class="formats">
+                    JPG · JPEG · PNG · WebP · Maximum 10 MB
+                </div>
+
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    required
+                >
+
+            </label>
+
+            <!-- Selected file -->
+
+            <div
+                class="file-card"
+                id="fileCard"
+            >
+
+                <img
+                    class="thumb"
+                    id="previewThumb"
+                    alt="Selected image"
+                >
+
+                <div>
+
+                    <div
+                        class="file-name"
+                        id="fileName"
+                    ></div>
+
+                    <div
+                        class="file-meta"
+                        id="fileMeta"
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <!-- Dimensions -->
+
+            <div class="section-title">
+                Dimensions
+            </div>
+
+            <div class="dimensions">
+
+                <div class="field">
+
+                    <label for="width">
+                        Width
+                    </label>
+
+                    <div class="input-wrap">
+
+                        <input
+                            type="number"
+                            id="width"
+                            name="width"
+                            value="500"
+                            min="1"
+                            max="5000"
+                            required
+                        >
+
+                        <span class="unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="field">
+
+                    <label for="height">
+                        Height
+                    </label>
+
+                    <div class="input-wrap">
+
+                        <input
+                            type="number"
+                            id="height"
+                            name="height"
+                            value="500"
+                            min="1"
+                            max="5000"
+                            required
+                        >
+
+                        <span class="unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Aspect ratio -->
+
+            <label class="lock-row">
+
+                <input
+                    type="checkbox"
+                    id="lockRatio"
+                    checked
+                >
+
+                🔒 Keep aspect ratio
+
+            </label>
+
+            <!-- Social presets -->
+
+            <div class="section-title">
+                Social Media Presets
+            </div>
+
+            <div class="presets">
+
+                <button
+                    type="button"
+                    class="preset"
+                    data-width="1080"
+                    data-height="1080"
+                >
+                    Instagram 1:1
+                </button>
+
+                <button
+                    type="button"
+                    class="preset"
+                    data-width="1280"
+                    data-height="720"
+                >
+                    YouTube 16:9
+                </button>
+
+                <button
+                    type="button"
+                    class="preset"
+                    data-width="1200"
+                    data-height="630"
+                >
+                    Facebook
+                </button>
+
+                <button
+                    type="button"
+                    class="preset"
+                    data-width="1200"
+                    data-height="627"
+                >
+                    LinkedIn
+                </button>
+
+                <button
+                    type="button"
+                    class="preset"
+                    data-width="1600"
+                    data-height="900"
+                >
+                    X / Twitter
+                </button>
+
+            </div>
+
+            <!-- Resolution presets -->
+
+            <div class="section-title">
+                Resolution
+            </div>
+
+            <div class="presets">
+
+                <button
+                    type="button"
+                    class="preset resolution-preset"
+                    data-width="854"
+                    data-height="480"
+                >
+                    480p
+                </button>
+
+                <button
+                    type="button"
+                    class="preset resolution-preset"
+                    data-width="1280"
+                    data-height="720"
+                >
+                    720p
+                </button>
+
+                <button
+                    type="button"
+                    class="preset resolution-preset"
+                    data-width="1920"
+                    data-height="1080"
+                >
+                    1080p
+                </button>
+
+                <button
+                    type="button"
+                    class="preset resolution-preset"
+                    data-width="2560"
+                    data-height="1440"
+                >
+                    2K
+                </button>
+
+                <button
+                    type="button"
+                    class="preset resolution-preset"
+                    data-width="3840"
+                    data-height="2160"
+                >
+                    4K
+                </button>
+
+            </div>
+
+            <!-- Quality -->
+
+            <div class="section-title">
+                Quality
+            </div>
+
+            <div class="quality-header">
+
+                <span id="qualityLabel">
+                    Output Quality
+                </span>
+
+                <span class="quality-value">
+
+                    <span id="qualityValue">
+                        80
+                    </span>%
+
+                </span>
+
+            </div>
+
+            <input
+                type="range"
+                id="quality"
+                name="quality"
+                min="10"
+                max="100"
+                value="80"
+            >
+
+            <div class="quality-help">
+
+                Higher quality gives a better image.
+                Lower quality reduces file size.
+
+            </div>
+
+            <!-- Submit -->
+
+            <button
+                class="submit"
+                id="submitButton"
+                type="submit"
+            >
+                Resize Image →
+            </button>
+
+        </form>
+
+        <div class="trust">
+
+            <span>✓ JPG</span>
+            <span>✓ PNG</span>
+            <span>✓ WebP</span>
+            <span>✓ 10 MB limit</span>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Free image resizing tool
+    </div>
+
+</div>
+
+<script>
+
+    const imageInput =
+        document.getElementById("image");
+
+    const uploadArea =
+        document.getElementById("uploadArea");
+
+    const fileCard =
+        document.getElementById("fileCard");
+
+    const previewThumb =
+        document.getElementById("previewThumb");
+
+    const fileName =
+        document.getElementById("fileName");
+
+    const fileMeta =
+        document.getElementById("fileMeta");
+
+    const widthInput =
+        document.getElementById("width");
+
+    const heightInput =
+        document.getElementById("height");
+
+    const lockRatio =
+        document.getElementById("lockRatio");
+
+    const qualityInput =
+        document.getElementById("quality");
+
+    const qualityValue =
+        document.getElementById("qualityValue");
+
+    const qualityLabel =
+    document.getElementById("qualityLabel");
+
+    const resizeForm =
+        document.getElementById("resizeForm");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+    let aspectRatio = null;
+
+
+    function formatBytes(bytes) {
+
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+            return (
+                bytes / 1024
+            ).toFixed(1) + " KB";
+        }
+
+        return (
+            bytes / (1024 * 1024)
+        ).toFixed(2) + " MB";
+    }
+
+
+    function loadImage(file) {
+
+        if (!file) {
+            return;
+        }
+
+        const fileType = file.type;
+
+    if (fileType === "image/png") {
+        qualityLabel.textContent = "PNG Optimization";
+}
+     else {
+        qualityLabel.textContent = "Output Quality";
+}
+
+        fileName.textContent =
+            file.name;
+
+        fileMeta.textContent =
+            formatBytes(file.size);
+
+        const previewUrl =
+            URL.createObjectURL(file);
+
+        previewThumb.src =
+            previewUrl;
+
+        fileCard.style.display =
+            "flex";
+
+        const img =
+            new Image();
+
+        img.onload = function () {
+
+            aspectRatio =
+                img.width / img.height;
+
+            const safeWidth =
+                Math.min(
+                    img.width,
+                    5000
+                );
+
+            const safeHeight =
+                Math.round(
+                    safeWidth /
+                    aspectRatio
+                );
+
+            widthInput.value =
+                safeWidth;
+
+            heightInput.value =
+                Math.min(
+                    safeHeight,
+                    5000
+                );
+
+            URL.revokeObjectURL(
+                img.src
+            );
+        };
+
+        img.src =
+            previewUrl;
+    }
+
+
+    imageInput.addEventListener(
+        "change",
+        function () {
+
+            loadImage(
+                imageInput.files[0]
+            );
+
+        }
+    );
+
+
+    uploadArea.addEventListener(
+        "dragover",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadArea.classList.add(
+                "dragover"
+            );
+
+        }
+    );
+
+
+    uploadArea.addEventListener(
+        "dragleave",
+        function () {
+
+            uploadArea.classList.remove(
+                "dragover"
+            );
+
+        }
+    );
+
+
+    uploadArea.addEventListener(
+        "drop",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadArea.classList.remove(
+                "dragover"
+            );
+
+            if (
+                event.dataTransfer.files.length
+            ) {
+
+                imageInput.files =
+                    event.dataTransfer.files;
+
+                loadImage(
+                    event.dataTransfer.files[0]
+                );
+
+            }
+
+        }
+    );
+
+
+    widthInput.addEventListener(
+        "input",
+        function () {
+
+            if (
+                lockRatio.checked &&
+                aspectRatio &&
+                widthInput.value
+            ) {
+
+                heightInput.value =
+                    Math.round(
+                        Number(
+                            widthInput.value
+                        ) /
+                        aspectRatio
+                    );
+
+            }
+
+        }
+    );
+
+
+    heightInput.addEventListener(
+        "input",
+        function () {
+
+            if (
+                lockRatio.checked &&
+                aspectRatio &&
+                heightInput.value
+            ) {
+
+                widthInput.value =
+                    Math.round(
+                        Number(
+                            heightInput.value
+                        ) *
+                        aspectRatio
+                    );
+
+            }
+
+        }
+    );
+
+
+    qualityInput.addEventListener(
+        "input",
+        function () {
+
+            qualityValue.textContent =
+                qualityInput.value;
+
+        }
+    );
+
+
+    /*
+        Presets:
+        Click once  → select
+        Click again → deselect
+    */
+
+    document
+        .querySelectorAll(".preset")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const wasActive =
+                        button.classList.contains(
+                            "active"
+                        );
+
+                    document
+                        .querySelectorAll(".preset")
+                        .forEach(function (item) {
+
+                            item.classList.remove(
+                                "active"
+                            );
+
+                        });
+
+                    if (wasActive) {
+
+                        return;
+
+                    }
+
+                    widthInput.value =
+                        button.dataset.width;
+
+                    heightInput.value =
+                        button.dataset.height;
+
+                    lockRatio.checked =
+                        false;
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                }
+            );
+
+        });
+
+
+    resizeForm.addEventListener(
+        "submit",
+        function () {
+
+            submitButton.disabled =
+                true;
+
+            submitButton.classList.add(
+                "loading"
+            );
+
+            submitButton.textContent =
+                "Processing image…";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

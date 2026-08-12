@@ -1,5 +1,9 @@
-from app import app
-from app import routes
+from app import app as flask_app
+import app.routes
+
+
+app = flask_app
+
 
 if __name__ == "__main__":
     app.run(

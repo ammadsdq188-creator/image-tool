@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request
+from flask import render_template, request, Response
 from PIL import Image
 import io
 import base64
@@ -152,3 +152,24 @@ def home():
         )
 
     return render_template("index.html")
+
+@app.route("/robots.txt")
+def robots_txt():
+    return Response(
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Sitemap: http://13.219.184.188/sitemap.xml\n",
+        mimetype="text/plain",
+    )
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://13.219.184.188/</loc>
+    </url>
+</urlset>
+"""
+    return Response(xml, mimetype="application/xml")

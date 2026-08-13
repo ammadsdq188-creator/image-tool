@@ -173,3 +173,23 @@ def sitemap_xml():
 </urlset>
 """
     return Response(xml, mimetype="application/xml")
+
+
+@app.route("/privacy")
+def privacy():
+    return render_template("legal/privacy.html")
+
+
+@app.route("/terms")
+def terms():
+    return render_template("legal/terms.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("legal/about.html")
+
+
+@app.route("/contact")
+def contact():
+    return render_template("legal/contact.html")

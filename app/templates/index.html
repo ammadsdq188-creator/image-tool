@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -324,6 +324,74 @@
             font-size: 12px;
             margin-top: 20px;
         }
+
+.content-section {
+    margin-top: 32px;
+    background: var(--card);
+    border: 1px solid rgba(217, 225, 235, .9);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 12px 35px rgba(30, 41, 59, .06);
+}
+
+.content-section h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    letter-spacing: -.5px;
+}
+
+.content-section h3 {
+    margin: 24px 0 8px;
+    font-size: 17px;
+}
+
+.content-section p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.faq-item {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.faq-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.faq-question {
+    margin: 0 0 7px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.footer {
+    text-align: center;
+    color: #8a94a6;
+    font-size: 12px;
+    margin-top: 28px;
+    line-height: 1.8;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
 
         @media (max-width: 650px) {
             .page {
@@ -696,10 +764,118 @@
 
         </div>
 
-    </div>
+        </div>
+
+    <section class="content-section">
+        <h2>Free Online Image Resizer</h2>
+
+        <p>
+            ImageTool is a simple online image resizer for JPG, PNG, and WebP
+            images. Resize images to custom dimensions, keep the original
+            aspect ratio, choose output quality, and download the result
+            directly from your browser.
+        </p>
+
+        <h3>Resize images for social media</h3>
+
+        <p>
+            Use the built-in presets for common image sizes, including
+            Instagram 1:1, YouTube 16:9, Facebook, LinkedIn, and X / Twitter.
+            You can also choose common 480p, 720p, 1080p, 2K, and 4K
+            resolutions.
+        </p>
+
+        <h3>Supported image formats</h3>
+
+        <p>
+            ImageTool supports JPG, JPEG, PNG, and WebP images with a maximum
+            upload size of 10 MB. You can choose custom width and height values
+            up to 5000 pixels.
+        </p>
+
+        <h3>How to resize an image</h3>
+
+        <p>
+            Upload an image, choose your desired dimensions, optionally keep
+            the aspect ratio locked, select a quality level, and click
+            “Resize Image”. Your resized image is then generated for download.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <p class="faq-question">Is ImageTool free?</p>
+            <p>
+                Yes. ImageTool is currently available as a free online image
+                resizing tool.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">Which image formats are supported?</p>
+            <p>
+                ImageTool currently supports JPG, JPEG, PNG, and WebP images.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">What is the maximum upload size?</p>
+            <p>
+                The current maximum upload size is 10 MB per image.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">Can I keep the original aspect ratio?</p>
+            <p>
+                Yes. Enable “Keep aspect ratio” and the corresponding
+                dimension will be adjusted automatically.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">Can I resize images for social media?</p>
+            <p>
+                Yes. ImageTool includes presets for Instagram, YouTube,
+                Facebook, LinkedIn, and X / Twitter.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">Does ImageTool support high-resolution images?</p>
+            <p>
+                Yes. Custom dimensions can be set up to 5000 pixels, and
+                common 2K and 4K presets are available.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-question">Does ImageTool collect website analytics?</p>
+            <p>
+                ImageTool uses Google Analytics to understand website usage,
+                such as visits and general interactions. See our
+                <a href="/privacy">Privacy Policy</a> for more information.
+            </p>
+        </div>
+    </section>
 
     <div class="footer">
-        Free image resizing tool * beta
+        <div>
+            Free image resizing tool · Beta
+        </div>
+
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/contact">Contact</a>
+        </div>
+
+        <div>
+            © 2026 ImageTool
+        </div>
     </div>
 
 </div>
